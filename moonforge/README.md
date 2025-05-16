@@ -1,28 +1,34 @@
-# Moonbirds Art Forge
-
-Create Wizard-Moonbird-style artwork, mint as NFTs, and tip with MOON tokens.
+# Moonbirds Art Forge 🎨🦉
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/yourusername/moonbirds-art-forge)
+[![CI Status](https://github.com/yourusername/moonbirds-art-forge/workflows/CI/badge.svg)](https://github.com/yourusername/moonbirds-art-forge/actions)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Features
+Create stunning Wizard-Moonbird-style artwork using AI, mint as NFTs, and tip creators with MOON tokens.
 
-- 🎨 Generate AI-powered Moonbird artwork
-- 🖼️ Mint as NFTs on Base L2
-- 💰 Tip creators with MOON tokens
-- 🔗 Wallet integration for Moonbird holders
-- ⚡ Cloudflare-powered AI generation
-- 🎯 Responsive design with Tailwind CSS
+## 🌟 Features
 
-## Prerequisites
+- **AI Art Generation**: Create unique Moonbird-style artwork using FLUX and DALL-E models
+- **NFT Minting**: Mint your creations as NFTs on Base L2 with gasless transactions
+- **MOON Token Tipping**: Support creators by tipping with MOON tokens
+- **Responsive Gallery**: Browse and discover community creations
+- **Wallet Integration**: Connect with popular Web3 wallets
+- **Progressive Enhancement**: Beautiful UI with real-time generation progress
 
-- Node.js 20+ (LTS recommended)
-- pnpm 8.x
-- Cloudflare account (for deployment)
-- Wallet with Moonbirds NFT (for testing)
+## 🚀 Quick Deploy
 
-## Getting Started
+Deploy your own instance with one click:
 
-### Local Development
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/yourusername/moonbirds-art-forge)
+
+## 📋 Prerequisites
+
+- Node.js 20+
+- pnpm 10.10.0+
+- Cloudflare account
+- Web3 wallet (for NFT features)
+
+## 🛠️ Development Setup
 
 1. **Clone the repository**
    ```bash
@@ -38,97 +44,82 @@ Create Wizard-Moonbird-style artwork, mint as NFTs, and tip with MOON tokens.
 3. **Set up environment variables**
    ```bash
    cp apps/web/.env.example apps/web/.env
-   # Update the values in .env with your configuration
+   cp workers/api_generate/.env.example workers/api_generate/.env
    ```
 
-4. **Start the development server**
+4. **Configure Cloudflare**
+   - Create KV namespaces for image storage and caching
+   - Update `wrangler.toml` with your namespace IDs
+   - Set up Cloudflare AI bindings
+
+5. **Run development server**
    ```bash
-   pnpm --filter web dev
+   pnpm dev
    ```
-   The app will be available at http://localhost:3000
 
-### Project Structure
+## 🏗️ Architecture
 
 ```
-moonbirds-art-forge/
+moonforge/
 ├── apps/
-│   └── web/                    # Astro frontend
-│       ├── public/             # Static assets
-│       ├── src/
-│       │   ├── components/     # Reusable components
-│       │   ├── layouts/        # Page layouts
-│       │   ├── pages/          # Route components
-│       │   └── styles/         # Global styles
-│       └── astro.config.mjs    # Astro configuration
-│
+│   └── web/             # Astro frontend application
 ├── packages/
-│   └── tokens/              # Design tokens and theme
-│       ├── src/
-│       │   └── index.ts     # Token definitions
-│       └── tailwind.config.js # Tailwind configuration
-│
+│   ├── tokens/          # Design system tokens
+│   └── nft-minting/     # NFT minting utilities
 ├── workers/
-│   ├── api_generate/       # Image generation API
-│   └── tuner_workflow/     # Prompt tuning workflows
-│
-├── contracts/              # Smart contracts
-├── .github/                # GitHub workflows
-├── .gitignore
-├── package.json
-├── pnpm-workspace.yaml
-└── README.md
+│   └── api_generate/    # Cloudflare Worker API
+└── workflows/
+    └── tuner/           # Prompt optimization workflow
 ```
 
-## Development Workflow
+## 🔑 Environment Variables
 
-- **Linting**: `pnpm lint`
-- **Type Checking**: `pnpm check`
-- **Formatting**: `pnpm format`
-- **Build**: `pnpm build`
+### Web App
+- `WORKER_URL` - API worker endpoint
+- `PUBLIC_WEB3_PROJECT_ID` - WalletConnect project ID
 
-## Deployment
+### API Worker
+- `THIRDWEB_SECRET_KEY` - ThirdWeb SDK key
+- `RELAYER_PRIVATE_KEY` - Gasless minting relayer key
+- `NFT_CONTRACT_ADDRESS` - Deployed NFT contract
+- `DEFENDER_API_KEY` - OpenZeppelin Defender key (optional)
+- `SIGNER_ADDRESS` - Authorized signer for gasless minting
 
-### Cloudflare Pages
+## 📝 API Endpoints
 
-1. Push your code to a GitHub repository
-2. Connect the repository to Cloudflare Pages
-3. Set the following build settings:
-   - Framework preset: Astro
-   - Build command: `pnpm --filter web build`
-   - Build output directory: `apps/web/dist`
-   - Environment variables: Add your `.env` variables
+- `POST /api/generate` - Generate artwork
+- `POST /api/mint` - Mint NFT
+- `GET /api/mint/:tokenId` - Get mint record
+- `POST /api/tips` - Record tip transaction
+- `GET /api/tips` - Get tips leaderboard
 
-### Environment Variables
-
-Create a `.env` file in the `apps/web` directory with the following variables:
-
-```env
-# Cloudflare
-PUBLIC_CLOUDFLARE_ACCOUNT_ID=your_account_id
-PUBLIC_CLOUDFLARE_API_TOKEN=your_api_token
-
-# Wallet Connect
-PUBLIC_WALLETCONNECT_PROJECT_ID=your_project_id
-
-# API Endpoints
-PUBLIC_API_BASE_URL=/api
-```
-
-## Contributing
+## 🤝 Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## License
+## 📜 License
 
-Distributed under the MIT License. See `LICENSE` for more information.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Acknowledgments
+## 🙏 Acknowledgments
 
-- [Moonbirds](https://moonbirds.xyz/) for the inspiration
-- [Cloudflare](https://cloudflare.com/) for the amazing edge platform
-- [Astro](https://astro.build/) for the awesome framework
-- [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS
+- Moonbirds community for inspiration
+- Cloudflare for infrastructure
+- ThirdWeb for NFT tooling
+- OpenAI and Anthropic for AI models
+
+## 🚧 Roadmap
+
+- [ ] SDXL LoRA fine-tuning for Moonbird styles
+- [ ] Collections and series support
+- [ ] Animation capabilities
+- [ ] Social features and profiles
+- [ ] Mobile app development
+
+---
+
+Built with ❤️ by the Moonbirds community
