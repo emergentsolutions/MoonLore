@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import GenerationProgress from '../components/GenerationProgress.astro';
 ---
 
 <BaseLayout title="Generate Art | Moonbirds Art Forge" description="Create your own Wizard-Moonbird-style artwork using AI">
@@ -24,8 +25,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             </div>
           </div>
           <div class="loading-indicator hidden w-full h-full flex items-center justify-center">
-            <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-primary"></div>
-            <p class="ml-4 text-foreground/80">Generating your masterpiece...</p>
+            <GenerationProgress id="generation-progress" />
           </div>
         </div>
 
@@ -36,9 +36,10 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                 hx-target="#image-preview" 
                 hx-swap="innerHTML" 
                 hx-indicator=".loading-indicator"
-                hx-on="htmx:beforeRequest: showLoading()"
-                hx-on="htmx:afterRequest: hideLoading()"
+                hx-on="htmx:beforeRequest: startGeneration()"
+                hx-on="htmx:afterRequest: completeGeneration()"
                 hx-on="htmx:sendError: handleError(event)"
+                hx-on="htmx:progress: updateProgress(event)"
           >
             <div class="mb-6">
               <label for="prompt" class="block text-sm font-medium text-foreground/80 mb-2">Describe your vision</label>
@@ -166,19 +167,59 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
 <script src="https://unpkg.com/htmx.org@1.9.10"></script>
 <script>
-  function showLoading() {
+  let generationSteps = [
+    { step: 1, message: 'Analyzing your prompt...' },
+    { step: 2, message: 'Enhancing with AI models...' },
+    { step: 3, message: 'Rendering your artwork...' },
+    { step: 4, message: 'Generation complete!' }
+  ];
+  
+  let currentStepIndex = 0;
+  let progressInterval;
+  
+  function startGeneration() {
     document.querySelector('.loading-indicator').classList.remove('hidden');
     document.querySelector('#image-preview').classList.add('hidden');
+    
+    // Reset progress
+    currentStepIndex = 0;
+    window.updateGenerationProgress(1, generationSteps[0].message);
+    
+    // Simulate progress updates
+    progressInterval = setInterval(() => {
+      currentStepIndex++;
+      if (currentStepIndex < generationSteps.length - 1) {
+        const step = generationSteps[currentStepIndex];
+        window.updateGenerationProgress(step.step, step.message);
+      }
+    }, 2000);
   }
   
-  function hideLoading() {
-    document.querySelector('.loading-indicator').classList.add('hidden');
-    document.querySelector('#image-preview').classList.remove('hidden');
+  function completeGeneration() {
+    clearInterval(progressInterval);
+    window.updateGenerationProgress(4, 'Generation complete!');
+    
+    setTimeout(() => {
+      document.querySelector('.loading-indicator').classList.add('hidden');
+      document.querySelector('#image-preview').classList.remove('hidden');
+    }, 500);
+  }
+  
+  function updateProgress(event) {
+    // Handle real progress events from server-sent events
+    if (event.detail && event.detail.progress) {
+      const progress = event.detail.progress;
+      const stepIndex = Math.floor(progress * (generationSteps.length - 1));
+      const step = generationSteps[stepIndex];
+      window.updateGenerationProgress(step.step, step.message);
+    }
   }
   
   function handleError(event) {
     console.error('Generation error:', event.detail);
-    hideLoading();
+    clearInterval(progressInterval);
+    document.querySelector('.loading-indicator').classList.add('hidden');
+    document.querySelector('#image-preview').classList.remove('hidden');
     document.querySelector('#image-preview').innerHTML = `
       <div class="text-center p-4">
         <div class="text-red-500 mb-2">
@@ -186,8 +227,14 @@ import BaseLayout from '../layouts/BaseLayout.astro';
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
         </div>
-        <p class="text-lg font-medium">Connection failed</p>
+        <p class="text-lg font-medium">Generation failed</p>
         <p class="text-sm text-foreground/60 mt-1">Please check your network and try again</p>
+        <button 
+          class="btn btn-primary mt-4"
+          onclick="resetGenerator()"
+        >
+          Try Again
+        </button>
       </div>
     `;
   }
