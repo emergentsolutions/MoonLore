@@ -1,0 +1,387 @@
+openapi: 3.0.3
+info:
+  title: Moonbirds Art Forge API
+  description: |
+    API for generating Moonbird-style artwork using AI, minting NFTs, and managing tips.
+  version: 1.0.0
+  contact:
+    name: Moonbirds Art Forge Team
+    email: support@moonbirds-art.com
+  license:
+    name: MIT
+
+servers:
+  - url: https://api.moonbirds-art.com
+    description: Production server
+  - url: https://moonbirds-api-generate.workers.dev
+    description: Staging server
+  - url: http://localhost:8787
+    description: Development server
+
+paths:
+  /api/health:
+    get:
+      summary: Health check
+      description: Check API health and available features
+      operationId: getHealth
+      responses:
+        '200':
+          description: API is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /api/generate:
+    post:
+      summary: Generate artwork
+      description: Generate Moonbird-style artwork using AI models
+      operationId: generateArtwork
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GenerateRequest'
+      responses:
+        '200':
+          description: Image generated successfully
+          content:
+            text/html:
+              schema:
+                type: string
+                description: HTML snippet for HTMX swap
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Generation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/images/{id}:
+    get:
+      summary: Get generated image
+      description: Retrieve a generated image by ID
+      operationId: getImage
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Image retrieved successfully
+          content:
+            image/png:
+              schema:
+                type: string
+                format: binary
+        '404':
+          description: Image not found
+
+  /api/images/{id}/metadata:
+    get:
+      summary: Get image metadata
+      description: Retrieve metadata for a generated image
+      operationId: getImageMetadata
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Metadata retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ImageMetadata'
+        '404':
+          description: Image not found
+
+  /api/mint:
+    post:
+      summary: Mint NFT
+      description: Mint an artwork as an NFT
+      operationId: mintNFT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MintRequest'
+      responses:
+        '200':
+          description: NFT minted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Minting failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/mint/{tokenId}:
+    get:
+      summary: Get mint record
+      description: Retrieve minting record by token ID
+      operationId: getMintRecord
+      parameters:
+        - name: tokenId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Mint record retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MintRecord'
+        '404':
+          description: Record not found
+
+  /api/tips:
+    post:
+      summary: Record tip
+      description: Record a MOON token tip transaction
+      operationId: recordTip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TipRequest'
+      responses:
+        '200':
+          description: Tip recorded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TipResponse'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      summary: Get tips
+      description: Retrieve tip transactions
+      operationId: getTips
+      parameters:
+        - name: imageId
+          in: query
+          schema:
+            type: string
+          description: Filter by image ID
+        - name: address
+          in: query
+          schema:
+            type: string
+          description: Filter by wallet address
+      responses:
+        '200':
+          description: Tips retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TipsResponse'
+
+components:
+  schemas:
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ok]
+        timestamp:
+          type: string
+          format: date-time
+        features:
+          type: object
+          properties:
+            flux:
+              type: boolean
+            dalle:
+              type: boolean
+            nftMinting:
+              type: boolean
+
+    GenerateRequest:
+      type: object
+      required:
+        - prompt
+      properties:
+        prompt:
+          type: string
+          description: Text description of the artwork
+          minLength: 1
+          maxLength: 1000
+        style:
+          type: string
+          enum: [wizard, cosmic, cyber]
+          description: Art style preset
+
+    ImageMetadata:
+      type: object
+      properties:
+        prompt:
+          type: string
+        style:
+          type: string
+        model:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    MintRequest:
+      type: object
+      required:
+        - imageUrl
+        - address
+        - name
+      properties:
+        imageUrl:
+          type: string
+          format: uri
+        address:
+          type: string
+          pattern: '^0x[a-fA-F0-9]{40}$'
+        name:
+          type: string
+        description:
+          type: string
+        attributes:
+          type: array
+          items:
+            type: object
+            properties:
+              trait_type:
+                type: string
+              value:
+                oneOf:
+                  - type: string
+                  - type: number
+        gasless:
+          type: boolean
+        signature:
+          type: string
+
+    MintResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        tokenId:
+          type: string
+        txHash:
+          type: string
+        error:
+          type: string
+
+    MintRecord:
+      type: object
+      properties:
+        tokenId:
+          type: string
+        address:
+          type: string
+        metadata:
+          type: object
+        imageUrl:
+          type: string
+        metadataUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    TipRequest:
+      type: object
+      required:
+        - from
+        - to
+        - amount
+        - imageId
+        - txHash
+      properties:
+        from:
+          type: string
+          pattern: '^0x[a-fA-F0-9]{40}$'
+        to:
+          type: string
+          pattern: '^0x[a-fA-F0-9]{40}$'
+        amount:
+          type: string
+        imageId:
+          type: string
+        txHash:
+          type: string
+
+    TipResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        tipId:
+          type: string
+        message:
+          type: string
+
+    TipsResponse:
+      type: object
+      properties:
+        tips:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              from:
+                type: string
+              to:
+                type: string
+              amount:
+                type: string
+              imageId:
+                type: string
+              txHash:
+                type: string
+              timestamp:
+                type: string
+                format: date-time
+        total:
+          type: integer
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        code:
+          type: string
