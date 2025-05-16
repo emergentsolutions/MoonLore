@@ -1,0 +1,21 @@
+# Cloudflare Pages configuration
+name = "moonbirds-art-forge"
+compatibility_date = "2024-01-01"
+
+[build]
+command = "cd moonforge && pnpm install && pnpm build"
+working_directory = "/"
+watch_paths = ["moonforge/**/*"]
+
+[build.upload]
+format = "service-worker"
+
+[[build.upload.rules]]
+type = "CompiledWasm"
+globs = ["**/*.wasm"]
+fallthrough = false
+
+[[build.upload.rules]]
+type = "Text"
+globs = ["**/*.js", "**/*.css", "**/*.json", "**/*.html"]
+fallthrough = true
