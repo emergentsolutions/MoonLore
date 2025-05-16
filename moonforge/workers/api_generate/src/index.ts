@@ -2,6 +2,7 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { generateWithFlux } from './flux';
 import { generateWithDallE } from './dalle';
+import { mintNFT, getMintRecord } from './mint';
 import { createLogger } from './logger';
 import { AppError, ValidationError, NotFoundError, errorHandler } from './errors';
 
@@ -9,7 +10,13 @@ export interface Env {
   AI: any;
   GENERATED_IMAGES: KVNamespace;
   PROMPT_CACHE: KVNamespace;
+  MINT_RECORDS: KVNamespace;
   USE_DALLE_FALLBACK?: string;
+  THIRDWEB_SECRET_KEY: string;
+  RELAYER_PRIVATE_KEY: string;
+  NFT_CONTRACT_ADDRESS: string;
+  CHAIN_ID?: number;
+  RPC_URL?: string;
 }
 
 const app = new Hono<{ Bindings: Env }>();
@@ -131,6 +138,38 @@ app.get('/api/images/:id/metadata', async (c) => {
   }
 });
 
+// Mint NFT endpoint
+app.post('/api/mint', async (c) => {
+  try {
+    const body = await c.req.json();
+    logger.info('Mint request', { address: body.address });
+    
+    const result = await mintNFT(c.env, body);
+    
+    if (!result.success) {
+      throw new AppError(result.error || 'Mint failed', 500);
+    }
+    
+    return c.json(result);
+  } catch (error) {
+    logger.error('Mint endpoint error', error);
+    return errorHandler(error);
+  }
+});
+
+// Get mint record
+app.get('/api/mint/:tokenId', async (c) => {
+  try {
+    const tokenId = c.req.param('tokenId');
+    const record = await getMintRecord(c.env, tokenId);
+    
+    return c.json(record);
+  } catch (error) {
+    logger.error('Get mint record error', error);
+    return errorHandler(error);
+  }
+});
+
 // Health check
 app.get('/api/health', (c) => {
   const health = { 
@@ -138,7 +177,8 @@ app.get('/api/health', (c) => {
     timestamp: new Date().toISOString(),
     features: {
       flux: true,
-      dalle: c.env.USE_DALLE_FALLBACK === 'true'
+      dalle: c.env.USE_DALLE_FALLBACK === 'true',
+      nftMinting: !!c.env.NFT_CONTRACT_ADDRESS
     }
   };
   logger.debug('Health check', health);

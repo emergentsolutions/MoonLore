@@ -15,6 +15,11 @@ binding = "PROMPT_CACHE"
 id = "YOUR_PROMPT_CACHE_NAMESPACE_ID"
 preview_id = "YOUR_PREVIEW_PROMPT_CACHE_ID"
 
+[[kv_namespaces]]
+binding = "MINT_RECORDS"
+id = "YOUR_MINT_RECORDS_NAMESPACE_ID"
+preview_id = "YOUR_PREVIEW_MINT_RECORDS_ID"
+
 [ai]
 binding = "AI"
 
