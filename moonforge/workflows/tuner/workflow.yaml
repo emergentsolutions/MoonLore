@@ -1,0 +1,118 @@
+name: moonbird-art-tuner
+version: 1.0.0
+description: Iterative prompt tuning workflow for Moonbird art generation
+
+config:
+  max_iterations: 5
+  target_score: 0.85
+  mutation_rate: 0.3
+  cache_ttl: 3600
+  models:
+    primary: flux-1-schnell
+    fallback: dall-e-2
+
+steps:
+  - name: initialize
+    description: Initialize prompt with base settings
+    action: setup_prompt
+    inputs:
+      base_prompt: "${USER_PROMPT}"
+      style: "${STYLE}"
+    outputs:
+      prompt_id: "${PROMPT_ID}"
+      enhanced_prompt: "${ENHANCED_PROMPT}"
+
+  - name: generate
+    description: Generate image from prompt
+    action: generate_image
+    inputs:
+      prompt: "${ENHANCED_PROMPT}"
+      model: "${MODEL}"
+    outputs:
+      image_url: "${IMAGE_URL}"
+      generation_time: "${GEN_TIME}"
+
+  - name: score
+    description: Score the generated image
+    action: calculate_score
+    inputs:
+      image_url: "${IMAGE_URL}"
+      target_style: "${STYLE}"
+      reference_embeddings: "${REFERENCE_EMBEDDINGS}"
+    outputs:
+      score: "${SCORE}"
+      features: "${FEATURES}"
+
+  - name: evaluate
+    description: Check if target score is met
+    action: check_threshold
+    inputs:
+      score: "${SCORE}"
+      target: "${config.target_score}"
+    outputs:
+      passed: "${PASSED}"
+      iterations: "${ITERATIONS}"
+
+  - name: mutate
+    description: Mutate prompt if score below threshold
+    condition: "${PASSED} == false && ${ITERATIONS} < ${config.max_iterations}"
+    action: mutate_prompt
+    inputs:
+      current_prompt: "${ENHANCED_PROMPT}"
+      score: "${SCORE}"
+      features: "${FEATURES}"
+      mutation_rate: "${config.mutation_rate}"
+    outputs:
+      mutated_prompt: "${ENHANCED_PROMPT}"
+      mutation_type: "${MUTATION_TYPE}"
+
+  - name: cache
+    description: Cache successful prompts
+    condition: "${PASSED} == true"
+    action: cache_prompt
+    inputs:
+      prompt_id: "${PROMPT_ID}"
+      prompt: "${ENHANCED_PROMPT}"
+      score: "${SCORE}"
+      ttl: "${config.cache_ttl}"
+
+  - name: finalize
+    description: Return final result
+    action: complete_workflow
+    inputs:
+      image_url: "${IMAGE_URL}"
+      final_prompt: "${ENHANCED_PROMPT}"
+      score: "${SCORE}"
+      iterations: "${ITERATIONS}"
+    outputs:
+      result: "${WORKFLOW_RESULT}"
+
+actions:
+  setup_prompt:
+    type: function
+    handler: setupPrompt
+  
+  generate_image:
+    type: api
+    endpoint: /api/generate
+    method: POST
+  
+  calculate_score:
+    type: function
+    handler: calculateScore
+  
+  check_threshold:
+    type: condition
+    handler: checkThreshold
+  
+  mutate_prompt:
+    type: function
+    handler: mutatePrompt
+  
+  cache_prompt:
+    type: storage
+    handler: cachePrompt
+  
+  complete_workflow:
+    type: function
+    handler: completeWorkflow
