@@ -6,7 +6,6 @@ build:
   command: |
     npm install -g pnpm@10.10.0
     pnpm install --frozen-lockfile
-    cd apps/web
-    pnpm build
-  directory: apps/web
-  publish: dist
+    pnpm run build
+  directory: .  # Build from root
+  publish: apps/web/dist
