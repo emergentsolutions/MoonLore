@@ -8,4 +8,4 @@ build:
     pnpm install --frozen-lockfile
     pnpm run build
   directory: .  # Build from root
-  publish: apps/web/dist
+  publish: apps/web/dist  # Output directory for Pages
