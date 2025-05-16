@@ -1,47 +1,89 @@
-# Astro Starter Kit: Minimal
+# MoonLore Web App
 
-```sh
-pnpm create astro@latest -- --template minimal
+The main web application for MoonLore - Create Wizard-Moonbird-style artwork powered by AI.
+
+## Development
+
+```bash
+pnpm install
+pnpm dev
 ```
 
-[![Open in StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/withastro/astro/tree/latest/examples/minimal)
-[![Open with CodeSandbox](https://assets.codesandbox.io/github/button-edit-lime.svg)](https://codesandbox.io/p/sandbox/github/withastro/astro/tree/latest/examples/minimal)
-[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/withastro/astro?devcontainer_path=.devcontainer/minimal/devcontainer.json)
+## Build
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+```bash
+pnpm build
+```
 
-## 🚀 Project Structure
+## Deployment
 
-Inside of your Astro project, you'll see the following folders and files:
+This app is deployed to Cloudflare Pages with the following configuration:
+
+- **Build command**: `pnpm install --frozen-lockfile && pnpm run build`
+- **Build output directory**: `apps/web/dist`
+- **Functions directory**: `apps/web/functions` (auto-detected)
+
+### Environment Variables
+
+Set these in Cloudflare Pages dashboard:
+
+```
+# AI Services
+OPENAI_API_KEY=your-openai-api-key
+
+# NFT Minting
+THIRDWEB_SECRET_KEY=your-thirdweb-secret-key
+NFT_CONTRACT_ADDRESS=your-nft-contract-address
+RELAYER_PRIVATE_KEY=your-relayer-private-key
+
+# Blockchain
+CHAIN_ID=8453
+RPC_URL=https://mainnet.base.org
+
+# Gasless (Optional)
+DEFENDER_API_KEY=your-defender-api-key
+DEFENDER_API_SECRET=your-defender-api-secret
+
+# Web3Modal
+NEXT_PUBLIC_PROJECT_ID=your-web3modal-project-id
+```
+
+## Features
+
+- AI-powered artwork generation using FLUX (primary) and DALL-E (fallback)
+- NFT minting on Base L2
+- MOON token tipping
+- Gasless minting support
+- Gallery view
+- Wallet integration
+
+## Tech Stack
+
+- Astro
+- Cloudflare Pages
+- Tailwind CSS
+- TypeScript
+- Web3 (wagmi/viem)
+
+## Project Structure
 
 ```text
-/
-├── public/
+/apps/web/
+├── public/          # Static assets
 ├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+│   ├── components/  # Astro components
+│   ├── layouts/     # Page layouts
+│   ├── lib/         # Utility functions
+│   ├── pages/       # Route pages
+│   └── styles/      # Global styles
+├── functions/       # Cloudflare Pages Functions
+│   └── api/         # API endpoints
+└── dist/            # Build output
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Available Routes
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `pnpm install`             | Installs dependencies                            |
-| `pnpm dev`             | Starts local dev server at `localhost:4321`      |
-| `pnpm build`           | Build your production site to `./dist/`          |
-| `pnpm preview`         | Preview your build locally, before deploying     |
-| `pnpm astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `pnpm astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- `/` - Home page
+- `/generator` - AI art generator
+- `/gallery` - Art gallery
+- `/api/*` - API endpoints (handled by functions)

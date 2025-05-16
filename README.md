@@ -93,6 +93,43 @@ moonlore/
 - `POST /api/tips` - Record tip transaction
 - `GET /api/tips` - Get tips leaderboard
 
+## 🚀 Deployment
+
+### GitHub Actions (Automatic)
+
+1. Push to `master` branch
+2. GitHub Action automatically builds and deploys to Cloudflare Pages
+
+### Manual Deployment via Cloudflare Pages Dashboard
+
+1. Connect your GitHub repository
+2. Build configuration:
+   - Build command: `pnpm install --frozen-lockfile && pnpm run build`  
+   - Build output directory: `apps/web/dist`
+   - Root directory: `/`
+3. Configure environment variables in Pages settings
+4. Functions are automatically deployed from `apps/web/functions`
+
+### Required Environment Variables
+
+```
+# AI Services
+OPENAI_API_KEY=your-openai-api-key
+
+# NFT Minting
+THIRDWEB_SECRET_KEY=your-thirdweb-secret-key
+NFT_CONTRACT_ADDRESS=your-nft-contract-address
+RELAYER_PRIVATE_KEY=your-relayer-private-key
+
+# Blockchain
+CHAIN_ID=8453
+RPC_URL=https://mainnet.base.org
+
+# Optional: Gasless Minting
+DEFENDER_API_KEY=your-defender-api-key
+DEFENDER_API_SECRET=your-defender-api-secret
+```
+
 ## 🤝 Contributing
 
 1. Fork the repository
