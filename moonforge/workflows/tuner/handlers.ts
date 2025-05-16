@@ -1,4 +1,5 @@
 import { createLogger } from '../../workers/api_generate/src/logger';
+import { similarityScorer } from './similarity';
 
 const logger = createLogger('tuner-handlers');
 
@@ -29,19 +30,26 @@ export async function setupPrompt(inputs: any, context: any): Promise<any> {
 export async function calculateScore(inputs: any, context: any): Promise<any> {
   const { image_url, target_style, reference_embeddings } = inputs;
   
-  // Simulate scoring (in real implementation, would use image analysis)
-  // For now, return random score for demo
-  const score = Math.random() * 0.4 + 0.6; // Random between 0.6 and 1.0
+  // Get the enhanced prompt from context
+  const enhancedPrompt = context.variables.get('ENHANCED_PROMPT');
   
-  const features = {
-    style_match: score + 0.05,
-    detail_level: score - 0.02,
-    composition: score + 0.01,
+  // Use similarity scorer to calculate score
+  const scoreResult = await similarityScorer.scoreImage({
+    prompt: enhancedPrompt,
+    style: target_style,
+    imageUrl: image_url,
+  });
+  
+  logger.info('Calculated score', { 
+    image_url, 
+    score: scoreResult.score, 
+    features: scoreResult.features 
+  });
+  
+  return { 
+    score: scoreResult.score, 
+    features: scoreResult.features 
   };
-  
-  logger.info('Calculated score', { image_url, score, features });
-  
-  return { score, features };
 }
 
 export async function checkThreshold(inputs: any, context: any): Promise<any> {
