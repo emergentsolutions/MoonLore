@@ -1,0 +1,93 @@
+0516T10:46
+Model: OpenAI o3 | qGIT: 6d8e41b | Tools: none
+
+⸻
+
+🪄 Superprompt: “Moonbirds Art Forge”
+
+Hand directly to: Windsurf – act as Team-Lead / Sr-Dev and execute until no open tasks remain.
+
+⸻
+
+I. Project DNA (Phase-1 MVP)
+	1.	Mission – Launch a public web-app that lets anyone create Wizard-Moonbird-style artwork, optionally mint it as an NFT, and pay or tip in Moon Coin (MOON).
+	2.	Core Aesthetic – Portal-cyan glow, thorn-vine frame, thick outlines, curved∶angular 5∶1, WCAG contrast ≥ 4.5 — formalised in qSLiCE tokens (packages/tokens).
+	3.	Image Engines
+	•	Primary  → Cloudflare Workers AI model @cf/black-forest-labs/flux-1-schnell (edge GPU).
+	•	Fallback → OpenAI DALL·E 3 routed through Cloudflare AI Gateway (same model ChatGPT uses).
+	•	(Offline SDXL-LoRA & Cloudflare Containers are deferred to Phase-2; create a TODO but do not build yet.)
+	4.	Prompt-Translation Layer – Closed-loop tuner built with Cloudflare Workflows GA:
+	1.	Render scene with DALL·E 3 (ground truth) and FLUX.
+	2.	Score cosine similarity via Llama-3-Vision embeddings (Workers AI).
+	3.	Mutate prompt (evolutionary search) until similarity ≥ 0.92 or 10 rounds.
+	4.	Cache winning prompt in KV for future calls.
+	5.	Wallet Context – Connect EVM wallet (wagmi/viem island); read Moonbird ERC-721 ownership + MOON balance; support gas-less mint on Base L2 and MOON tipping.
+
+⸻
+
+II. Cloudflare Platform Mandates
+
+Layer	2025 feature	How we’ll use it
+Durable execution	Cloudflare Workflows GA	Orchestrate the render ➜ score ➜ mutate loop.
+Full-stack Worker	“Frontend+backend+DB in one” capability	Host /api/generate, D1, R2 blobs in a single bundle where practical.
+Dev UX	Deploy to Cloudflare button & Vite plugin	Add one-click deploy badge in README; use Vite plugin in Astro build.
+
+
+⸻
+
+III. Tech Stack (Phase-1)
+	•	Frontend – Astro 5.7 + HTMX 2.0 (islands only).
+	•	Styling – Tailwind CSS driven by design tokens in packages/tokens.
+	•	Back-end – Workers, Workflows, R2, KV, D1.
+	•	CI/CD – GitHub Actions → wrangler deploy; lint, unit, e2e.
+	•	Repo – pnpm monorepo; Conventional Commits; protected main.
+
+⸻
+
+IV. Deliverables
+	1.	apps/web   — Astro site (landing, generator page, gallery).
+	2.	packages/tokens — JS export of colors, line-weights, glow levels.
+	3.	workers/api_generate — prompt composer, engine router, image streamer.
+	4.	workers/tuner_workflow — YAML for the closed-loop Workflows tuner.
+	5.	contracts/ — ERC-721 side-collection + MOON tip helper (thirdweb SDK).
+	6.	docs/ — Architecture diagram, OpenAPI spec, README with Deploy button.
+
+⸻
+
+V. Task Backlog (add each to tasks.qslice)
+
+ID	Task	Tier
+T1	Scaffold pnpm monorepo + Wrangler 3 config	a3
+T2	Implement Tailwind token layer & sample utilities	a2
+T3	Build Astro generator page with HTMX form & sliders	a3
+T4	Wallet-connect island (wagmi/viem), Moonbird & MOON hooks	a3
+T5	/api/generate Worker → FLUX primary, Gateway fallback	a3
+T6	tuner_workflow YAML (render, score, mutate, cache)	a3
+T7	Image stream → HTMX swap handler on client	a2
+T8	NFT mint endpoint (/api/mint) via thirdweb relayer	a3
+T9	CI pipeline + “Deploy to Cloudflare” badge	a2
+T10	Documentation pass (README, OpenAPI, style guide)	a1
+T-P2	(Phase-2 placeholder) SDXL-LoRA container + CF Containers deploy	a3
+
+(Mark T-P2 as blocked until June 2025.)
+
+⸻
+
+VI. Operating Protocol
+	•	Save this superprompt as /SUPERPROMPTS/moonbirds_art_forge.md.
+	•	Track all actions in tasks.qslice, keeping qSLiCE tiers accurate.
+	•	Follow branch policy (feat/** → PR → squash-merge).
+	•	Work autonomously; ping Ash only when blocked by secrets/infrastructure.
+	•	Maintain ≥ 90 % unit-test coverage on prompt composer & tuner logic.
+
+⸻
+
+Immediate Kick-off Checklist
+	1.	Repo Init – run pnpm dlx create-pnpm-workspace moonforge.
+	2.	Tailwind Tokens – create packages/tokens/index.js & Tailwind config.
+	3.	Hello-World Worker – return { ok: true } at /api/generate.
+	4.	Push PR ⇒ merge ⇒ deploy preview via Wrangler.
+
+⸻
+0516T10:46
+Model: OpenAI o3 | qGIT: 6d8e41b | Tools: none

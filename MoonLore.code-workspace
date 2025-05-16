@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "../GLOBAL"
+		},
+		{
+			"path": "../MEMORY"
+		}
+	],
+	"settings": {}
+}
