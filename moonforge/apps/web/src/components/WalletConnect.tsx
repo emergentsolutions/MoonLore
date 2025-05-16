@@ -3,6 +3,7 @@ import { mainnet, sepolia } from 'viem/chains';
 import { useAccount, useBalance, useConnect, useDisconnect } from 'wagmi';
 import { useState, useEffect } from 'react';
 import { checkMoonbirdOwnership } from '../lib/moonbirds';
+import { getMOONBalance, formatMOONBalance } from '../lib/moon-token';
 
 // Web3Modal configuration
 const projectId = 'YOUR_PROJECT_ID'; // Get from https://cloud.walletconnect.com
@@ -29,7 +30,11 @@ export default function WalletConnect() {
     balance: number;
     tokenIds: number[];
   } | null>(null);
-  const [checkingOwnership, setCheckingOwnership] = useState(false);
+  const [moonBalance, setMoonBalance] = useState<{
+    formatted: string;
+    symbol: string;
+  } | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -37,21 +42,31 @@ export default function WalletConnect() {
 
   useEffect(() => {
     if (isConnected && address) {
-      checkOwnership();
+      checkBalances();
     }
   }, [isConnected, address]);
 
-  const checkOwnership = async () => {
+  const checkBalances = async () => {
     if (!address) return;
     
-    setCheckingOwnership(true);
+    setLoading(true);
     try {
+      // Check Moonbird ownership
       const ownership = await checkMoonbirdOwnership(address);
       setMoonbirdOwnership(ownership);
+      
+      // Check MOON token balance
+      const moonTokenBalance = await getMOONBalance(address);
+      if (moonTokenBalance) {
+        setMoonBalance({
+          formatted: formatMOONBalance(moonTokenBalance.raw, moonTokenBalance.decimals),
+          symbol: moonTokenBalance.symbol,
+        });
+      }
     } catch (error) {
-      console.error('Error checking Moonbird ownership:', error);
+      console.error('Error checking balances:', error);
     } finally {
-      setCheckingOwnership(false);
+      setLoading(false);
     }
   };
 
@@ -72,15 +87,28 @@ export default function WalletConnect() {
         <div className="text-sm">
           <div className="text-foreground/70">Connected</div>
           <div className="font-medium">{formatAddress(address)}</div>
+          
+          {/* ETH Balance */}
           {balance && (
             <div className="text-xs text-foreground/60">
               {parseFloat(balance.formatted).toFixed(4)} {balance.symbol}
             </div>
           )}
-          {checkingOwnership && (
-            <div className="text-xs text-foreground/60">Checking Moonbirds...</div>
+          
+          {/* MOON Balance */}
+          {moonBalance && (
+            <div className="text-xs text-accent">
+              🌙 {moonBalance.formatted} {moonBalance.symbol}
+            </div>
           )}
-          {moonbirdOwnership && (
+          
+          {/* Loading indicator */}
+          {loading && (
+            <div className="text-xs text-foreground/60">Loading...</div>
+          )}
+          
+          {/* Moonbird ownership */}
+          {moonbirdOwnership && !loading && (
             <div className="text-xs">
               {moonbirdOwnership.isOwner ? (
                 <span className="text-primary">
@@ -92,6 +120,7 @@ export default function WalletConnect() {
             </div>
           )}
         </div>
+        
         <button
           onClick={() => disconnect()}
           className="btn btn-outline btn-sm"
