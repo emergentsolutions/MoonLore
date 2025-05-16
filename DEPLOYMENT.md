@@ -1,95 +1,98 @@
-# Deployment Instructions for Moonbirds Art Forge
+# Deployment Instructions for MoonLore
 
-## ⚠️ Important: Submodule Issue
+This project is ready to deploy to Cloudflare Pages. Follow these steps:
 
-This repository has been restructured from the original moonforge project to MoonLore. This causes deployment failures with the error "Failed: error occurred while updating repository submodules".
+## Prerequisites
 
-## 🚀 Deployment Options
+1. GitHub repository
+2. Cloudflare account
+3. Web3Modal project ID
 
-### Option 1: Direct Cloudflare Pages Deployment (Recommended)
+## Setup Steps
 
-1. **Fork or Clone this repository**
-2. **Create a new Cloudflare Pages project**
-3. **Configure build settings:**
-   - Build command: `npm install -g pnpm && pnpm install --frozen-lockfile && cd apps/web && pnpm build`
+### 1. Create GitHub Repository
+
+1. Create a new repository on GitHub named `moonlore`
+2. Add this project as the remote:
+   ```bash
+   git remote add origin https://github.com/<your-username>/moonlore.git
+   git push -u origin master
+   ```
+
+### 2. Configure Environment Variables
+
+Update the following in your code:
+- `apps/web/src/components/WalletConnect.tsx`: Replace `YOUR_PROJECT_ID` with your Web3Modal project ID
+- `wrangler.toml`: Update with your Cloudflare account ID and project settings
+
+### 3. Deploy to Cloudflare
+
+#### Option A: GitHub Actions (Automatic)
+1. The deployment workflow is already configured in `.github/workflows/deploy.yml`
+2. It will automatically deploy when you push to `master` branch
+3. Set up the following GitHub secrets:
+   - `CLOUDFLARE_API_TOKEN`: Your Cloudflare API token with Pages permissions
+   - `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID
+
+#### Option B: Cloudflare Pages Dashboard (Manual)
+1. Log in to Cloudflare dashboard
+2. Go to Pages
+3. Create a new project
+4. Connect your GitHub repository
+5. Use these build settings:
+   - Build command: `cd apps/web && pnpm install && pnpm build`
    - Build output directory: `apps/web/dist`
-   - Root directory: `/`
-   - Environment variables:
-     - `NODE_VERSION`: `20`
+   - Environment variables: Set any required variables
+   - Functions directory: `workers/api_generate`
 
-### Option 2: GitHub Actions Deployment
-
-1. **Set up GitHub Secrets:**
-   - `CLOUDFLARE_API_TOKEN`
-   - `CLOUDFLARE_ACCOUNT_ID`
-
-2. **Push to main branch**
-   - The `.github/workflows/deploy-cloudflare.yml` will handle deployment
-
-### Option 3: Manual Deployment
-
-1. **Clone the repository:**
-   ```bash
-   git clone <your-repo-url>
-   cd moonlore
-   ```
-
-2. **Prepare and build:**
-   ```bash
-   pnpm install --frozen-lockfile
-   cd apps/web
-   pnpm build
-   ```
-
-3. **Deploy with Wrangler:**
-   ```bash
-   npx wrangler pages deploy dist --project-name=moonbirds-art-forge
-   ```
-
-## 🛠️ Fixing the Submodule Issue (For Repository Maintainers)
-
-If you need to clean up the git history:
-
+#### Option C: Direct Cloudflare Deploy (Once repository is set up)
 ```bash
-# Create a clean branch
-git checkout -b clean-deploy
-
-# Remove the problematic history
-git filter-branch --index-filter 'git rm --cached --ignore-unmatch moonforge' HEAD
-
-# Force push (be careful!)
-git push origin clean-deploy --force
+cd apps/web
+pnpm cloudflare-deploy
 ```
 
-## 📝 Environment Variables Needed
+## Required Environment Variables
 
-### For Web App:
-- `PUBLIC_WORKER_URL`: Your API worker URL
-- `PUBLIC_WEB3_PROJECT_ID`: WalletConnect project ID
+Set these in your Cloudflare Pages settings:
 
-### For API Worker:
-- `THIRDWEB_SECRET_KEY`: ThirdWeb SDK key
-- `RELAYER_PRIVATE_KEY`: Gasless minting relayer key
-- `NFT_CONTRACT_ADDRESS`: Deployed NFT contract address
-- `DEFENDER_API_KEY`: OpenZeppelin Defender key (optional)
+```
+THIRDWEB_SECRET_KEY=your-thirdweb-secret-key
+NFT_CONTRACT_ADDRESS=your-nft-contract-address
+RELAYER_PRIVATE_KEY=your-relayer-private-key
+CHAIN_ID=8453
+RPC_URL=https://mainnet.base.org
+OPENAI_API_KEY=your-openai-api-key (for DALL-E)
+DEFENDER_API_KEY=your-defender-api-key (optional, for gasless)
+DEFENDER_API_SECRET=your-defender-api-secret (optional, for gasless)
+```
 
-## 🏗️ Build Configuration
+## Post-Deployment
 
-The project uses:
-- Node.js 20+
-- pnpm 10.10.0+
-- Astro for static site generation
-- Cloudflare Workers for API
+1. Update the GitHub repository URL in:
+   - `README.md`
+   - `apps/web/README.md`
+   - `_build.yml`
 
-## 🚨 Troubleshooting
+2. Set up custom domain (optional):
+   - Add your domain in Cloudflare Pages settings
+   - Update DNS records to point to Cloudflare
 
-If you encounter the submodule error:
-1. Use the manual deployment option
-2. Or create a fresh repository without the git history
-3. Or use the provided GitHub Action which bypasses submodule checks
+3. Monitor deployment:
+   - Check GitHub Actions for CI/CD status
+   - View Cloudflare Pages dashboard for deployment logs
+   - Test all features on the deployed site
 
-For any other issues, check:
-- Node version is 20+
-- pnpm is installed globally
-- All environment variables are set
-- Cloudflare account has necessary permissions
+## Troubleshooting
+
+If deployment fails:
+1. Check GitHub Actions logs for errors
+2. Verify all environment variables are set correctly
+3. Ensure dependencies are up to date
+4. Check Cloudflare Pages build logs
+5. Verify functions are properly configured
+
+## Rollback
+
+To rollback to a previous version:
+1. Use Cloudflare Pages dashboard to select previous deployment
+2. Or revert Git commit and push to trigger new deployment
