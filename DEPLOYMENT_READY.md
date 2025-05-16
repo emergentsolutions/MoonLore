@@ -17,7 +17,7 @@ The project is now fully configured for Cloudflare Pages deployment:
 1. **Create GitHub Repository**
    ```bash
    git remote add origin https://github.com/<your-username>/moonlore.git
-   git push -u origin master
+   git push -u origin main
    ```
 
 2. **Deploy to Cloudflare Pages**

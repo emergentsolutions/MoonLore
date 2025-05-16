@@ -16,7 +16,7 @@ This project is ready to deploy to Cloudflare Pages. Follow these steps:
 2. Add this project as the remote:
    ```bash
    git remote add origin https://github.com/<your-username>/moonlore.git
-   git push -u origin master
+   git push -u origin main
    ```
 
 ### 2. Configure Environment Variables
@@ -29,7 +29,7 @@ Update the following in your code:
 
 #### Option A: GitHub Actions (Automatic)
 1. The deployment workflow is already configured in `.github/workflows/deploy.yml`
-2. It will automatically deploy when you push to `master` branch
+2. It will automatically deploy when you push to `main` branch
 3. Set up the following GitHub secrets:
    - `CLOUDFLARE_API_TOKEN`: Your Cloudflare API token with Pages permissions
    - `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID

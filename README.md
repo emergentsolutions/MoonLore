@@ -97,7 +97,7 @@ moonlore/
 
 ### GitHub Actions (Automatic)
 
-1. Push to `master` branch
+1. Push to `main` branch
 2. GitHub Action automatically builds and deploys to Cloudflare Pages
 
 ### Manual Deployment via Cloudflare Pages Dashboard
