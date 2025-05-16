@@ -1,0 +1,24 @@
+---
+// This component will be enhanced with client-side interactivity
+---
+
+<button
+  type="button"
+  class="btn btn-outline"
+  id="connect-wallet"
+>
+  <span class="hidden sm:inline">Connect</span> Wallet
+</button>
+
+<script>
+  // Client-side wallet connection logic will be added here
+  document.addEventListener('astro:page-load', () => {
+    const connectButton = document.getElementById('connect-wallet');
+    if (connectButton) {
+      connectButton.addEventListener('click', async () => {
+        console.log('Connect wallet clicked');
+        // TODO: Implement wallet connection
+      });
+    }
+  });
+</script>

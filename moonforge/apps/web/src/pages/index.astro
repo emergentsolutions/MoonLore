@@ -1,0 +1,88 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Moonbirds Art Forge | Create AI-Generated Moonbird Art">
+  <div class="relative overflow-hidden">
+    {/* Hero Section */}
+    <div class="relative pt-20 pb-16 sm:pt-24 sm:pb-20 lg:pt-32 lg:pb-28">
+      <div class="relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="text-center">
+            <h1 class="text-4xl tracking-tight font-extrabold text-foreground sm:text-5xl md:text-6xl">
+              <span class="block">Create Unique</span>
+              <span class="block text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                Moonbird Artwork
+              </span>
+            </h1>
+            <p class="mt-3 max-w-md mx-auto text-base text-foreground/70 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
+              Generate stunning AI-powered Moonbird art, mint as NFTs, and share with the community.
+              All powered by Moon Coin (MOON).
+            </p>
+            <div class="mt-10 sm:flex sm:justify-center">
+              <div class="rounded-md shadow">
+                <a href="/generate" class="btn btn-primary w-full flex items-center justify-center px-8 py-3 text-base font-medium md:py-4 md:text-lg md:px-10">
+                  Start Creating
+                </a>
+              </div>
+              <div class="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
+                <a href="#how-it-works" class="btn btn-outline w-full flex items-center justify-center px-8 py-3 text-base font-medium md:py-4 md:text-lg md:px-10">
+                  Learn More
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* How it Works Section */}
+    <div id="how-it-works" class="py-16 bg-background-light/5">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="lg:text-center">
+          <h2 class="text-base text-primary font-semibold tracking-wide uppercase">How it works</h2>
+          <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-foreground sm:text-4xl">
+            Create, Mint, and Share in Three Simple Steps
+          </p>
+        </div>
+
+        <div class="mt-16">
+          <div class="grid md:grid-cols-3 gap-8">
+            {/* Step 1 */}
+            <div class="bg-background/50 p-6 rounded-xl border border-background-light/10">
+              <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl font-bold mb-4">
+                1
+              </div>
+              <h3 class="text-lg font-medium text-foreground mb-2">Generate Art</h3>
+              <p class="text-foreground/70">
+                Use our AI-powered tools to create unique Moonbird-inspired artwork with custom styles and parameters.
+              </p>
+            </div>
+
+            {/* Step 2 */}
+            <div class="bg-background/50 p-6 rounded-xl border border-background-light/10">
+              <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl font-bold mb-4">
+                2
+              </div>
+              <h3 class="text-lg font-medium text-foreground mb-2">Mint as NFT</h3>
+              <p class="text-foreground/70">
+                Turn your creation into a unique NFT on the blockchain with just a few clicks.
+              </p>
+            </div>
+
+            {/* Step 3 */}
+            <div class="bg-background/50 p-6 rounded-xl border border-background-light/10">
+              <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xl font-bold mb-4">
+                3
+              </div>
+              <h3 class="text-lg font-medium text-foreground mb-2">Share & Earn</h3>
+              <p class="text-foreground/70">
+                Share your artwork with the community and earn MOON tokens through tips and rewards.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>

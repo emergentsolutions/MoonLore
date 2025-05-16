@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Gallery | Moonbirds Art Forge" description="Browse and discover Moonbird-style artwork created by the community">
+  <section class="py-12 px-4 md:py-20">
+    <div class="container mx-auto max-w-6xl">
+      <h1 class="text-4xl md:text-5xl font-bold mb-6 text-center bg-gradient-to-r from-primary to-primary-light bg-clip-text text-transparent">
+        Moonbirds Gallery
+      </h1>
+      <p class="text-xl text-center mb-12 text-foreground/80 max-w-2xl mx-auto">
+        Explore artwork created by the community. Find inspiration or mint your favorites as NFTs.
+      </p>
+
+      <!-- Gallery Filters -->
+      <div class="mb-8 flex flex-wrap gap-4 justify-center">
+        <button class="px-4 py-2 bg-background-light/20 rounded-full text-sm font-medium hover:bg-background-light/30 transition active">
+          All Artworks
+        </button>
+        <button class="px-4 py-2 bg-background-light/10 rounded-full text-sm font-medium hover:bg-background-light/30 transition">
+          Wizard Style
+        </button>
+        <button class="px-4 py-2 bg-background-light/10 rounded-full text-sm font-medium hover:bg-background-light/30 transition">
+          Cosmic Style
+        </button>
+        <button class="px-4 py-2 bg-background-light/10 rounded-full text-sm font-medium hover:bg-background-light/30 transition">
+          Cyber Style
+        </button>
+        <button class="px-4 py-2 bg-background-light/10 rounded-full text-sm font-medium hover:bg-background-light/30 transition">
+          Recently Minted
+        </button>
+      </div>
+
+      <!-- Gallery Grid - Placeholder Content -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {Array.from({ length: 9 }).map((_, i) => (
+          <div class="bg-background-light/10 rounded-xl overflow-hidden border border-background-light/20 hover:border-primary/50 transition group">
+            <div class="relative aspect-square">
+              <img 
+                src={`https://placehold.co/600x600/3a3a3c/FFFFFF/png?text=Moonbird+${i+1}`} 
+                alt={`Moonbird Art ${i+1}`} 
+                class="w-full h-full object-cover"
+              />
+              <div class="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end justify-between p-4">
+                <div>
+                  <h3 class="text-lg font-medium">Moonbird #{i+1}</h3>
+                  <p class="text-sm text-foreground/80">By Creator{i+1}</p>
+                </div>
+                <button class="bg-primary hover:bg-primary-light text-background rounded-full p-2 transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- Pagination -->
+      <div class="mt-12 flex justify-center">
+        <nav class="inline-flex items-center rounded-md shadow-sm" aria-label="Pagination">
+          <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-l-md border border-background-light/20 bg-background-light/10 text-sm font-medium hover:bg-background-light/30">
+            <span class="sr-only">Previous</span>
+            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clip-rule="evenodd" />
+            </svg>
+          </a>
+          <a href="#" class="relative inline-flex items-center px-4 py-2 border border-background-light/20 bg-primary text-sm font-medium text-background">
+            1
+          </a>
+          <a href="#" class="relative inline-flex items-center px-4 py-2 border border-background-light/20 bg-background-light/10 text-sm font-medium hover:bg-background-light/30">
+            2
+          </a>
+          <a href="#" class="relative inline-flex items-center px-4 py-2 border border-background-light/20 bg-background-light/10 text-sm font-medium hover:bg-background-light/30">
+            3
+          </a>
+          <span class="relative inline-flex items-center px-4 py-2 border border-background-light/20 bg-background-light/10 text-sm font-medium">
+            ...
+          </span>
+          <a href="#" class="relative inline-flex items-center px-4 py-2 border border-background-light/20 bg-background-light/10 text-sm font-medium hover:bg-background-light/30">
+            8
+          </a>
+          <a href="#" class="relative inline-flex items-center px-2 py-2 rounded-r-md border border-background-light/20 bg-background-light/10 text-sm font-medium hover:bg-background-light/30">
+            <span class="sr-only">Next</span>
+            <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+            </svg>
+          </a>
+        </nav>
+      </div>
+
+      <!-- Coming Soon Section -->
+      <div class="mt-16 bg-background-light/10 rounded-xl border border-background-light/20 p-8 text-center">
+        <h2 class="text-2xl font-bold mb-4">NFT Minting Coming Soon</h2>
+        <p class="mb-6 text-foreground/80 max-w-2xl mx-auto">
+          Soon you'll be able to mint your favorite artworks as NFTs on the Base L2 network and tip creators with MOON tokens.
+        </p>
+        <button class="px-6 py-3 bg-background-light/20 text-foreground font-medium rounded-lg hover:bg-background-light/30 transition">
+          Get Notified
+        </button>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  document.addEventListener('astro:page-load', () => {
+    // Filter buttons
+    const filterButtons = document.querySelectorAll('.mb-8 button');
+    
+    if (filterButtons.length > 0) {
+      filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+          // Remove active class from all buttons
+          filterButtons.forEach(btn => {
+            btn.classList.remove('active', 'bg-background-light/20');
+            btn.classList.add('bg-background-light/10');
+          });
+          
+          // Add active class to clicked button
+          button.classList.add('active', 'bg-background-light/20');
+          button.classList.remove('bg-background-light/10');
+          
+          // In a real implementation, this would filter the gallery items
+          console.log('Filter clicked:', button.textContent.trim());
+        });
+      });
+    }
+  });
+</script>
+
+<style>
+  /* Add any page-specific styles here */
+  button.active {
+    position: relative;
+  }
+  
+  button.active::after {
+    content: '';
+    position: absolute;
+    bottom: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20px;
+    height: 2px;
+    background-color: var(--color-primary);
+    border-radius: 1px;
+  }
+</style>

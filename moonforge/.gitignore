@@ -1,0 +1,126 @@
+# === Build Output ===
+dist/
+.output/
+build/
+out/
+.astro/
+.turbo/
+.next/
+.nuxt/
+.svelte-kit/
+.contentlayer/
+
+# === Dependencies ===
+node_modules/
+
+# === Package Manager ===
+# pnpm
+.pnpm-store/
+.pnpm-debug.log*
+
+# npm
+npm-debug.log*
+
+# yarn
+yarn-debug.log*
+yarn-error.log*
+.yarn/*
+!.yarn/cache
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# === Environment Variables ===
+.env
+.env.*
+!.env.example
+!.env.template
+
+# === OS Files ===
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+ehthumbs_vista.db
+*.stackdump
+[Dd]esktop.ini
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# === Editor Directories ===
+# VSCode
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# JetBrains IDEs
+.idea/
+*.iml
+*.iws
+*.ipr
+.idea_modules/
+
+# === Cloudflare ===
+.wrangler/
+.dev.vars
+
+# === AI Assistant State ===
+@MEMORY/state/
+*.state.json
+*.state.backup
+
+# === Cache ===
+.cache/
+.eslintcache
+.stylelintcache
+
+# === Testing ===
+coverage/
+.nyc_output/
+
+# === Deployment Platforms ===
+# Netlify
+.netlify/
+
+# Vercel
+.vercel/
+
+# Cloudflare Pages
+.cloudflare/
+
+# === Temporary Files ===
+*.log
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+
+# === TypeScript ===
+*.tsbuildinfo
+
+# === Debugging ===
+.debug/
+
+# === Generated Content ===
+public/sitemap*.xml
+public/robots.txt
+public/feed.xml
+
+# === Monorepo Specific ===
+.nx/
+.nx-cache/

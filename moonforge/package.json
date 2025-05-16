@@ -1,0 +1,39 @@
+{
+  "name": "moonforge",
+  "version": "0.1.0",
+  "description": "Create Wizard-Moonbird-style artwork, mint as NFTs, and tip with MOON tokens",
+  "private": true,
+  "scripts": {
+    "build": "pnpm -r build",
+    "dev": "pnpm --filter web dev",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "format": "prettier --write .",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "check": "tsc --noEmit"
+  },
+  "keywords": [
+    "nft",
+    "moonbirds",
+    "ai",
+    "art",
+    "blockchain"
+  ],
+  "author": "Ashwin Philips",
+  "license": "MIT",
+  "packageManager": "pnpm@10.10.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "typescript": "^5.0.0"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "workers/*",
+    "contracts/*"
+  ]
+}
