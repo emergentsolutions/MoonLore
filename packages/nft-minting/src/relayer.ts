@@ -1,5 +1,5 @@
 import { ThirdwebSDK } from '@thirdweb-dev/sdk';
-import { GaslessWalletConfig } from '@thirdweb-dev/gasless';
+// Gasless configuration is part of SDK options
 import { ethers } from 'ethers';
 
 export interface RelayerConfig {
@@ -7,7 +7,7 @@ export interface RelayerConfig {
   chainId: number;
   rpcUrl: string;
   nftContractAddress: string;
-  gaslessConfig?: GaslessWalletConfig;
+  gaslessConfig?: any; // SDK gasless configuration
 }
 
 export class NFTRelayer {
@@ -23,7 +23,7 @@ export class NFTRelayer {
       config.privateKey,
       config.rpcUrl,
       {
-        gasless: config.gaslessConfig,
+        gasless: config.gaslessConfig || undefined,
       }
     );
   }

@@ -2,14 +2,15 @@
   "name": "@moonlore/nft-minting",
   "version": "0.1.0",
   "description": "NFT minting utilities for MoonLore",
-  "main": "src/index.ts",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "tsc"
   },
   "dependencies": {
     "@thirdweb-dev/sdk": "^4.0.0",
-    "@thirdweb-dev/gasless": "^0.1.0",
-    "ethers": "^6.0.0"
+    "@thirdweb-dev/storage": "^2.0.0",
+    "ethers": "^5.7.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

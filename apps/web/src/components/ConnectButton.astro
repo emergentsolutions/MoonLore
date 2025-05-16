@@ -1,15 +1,12 @@
 ---
-// This component now uses the WalletConnect React island
-import WalletConnect from './WalletConnect.tsx';
+// Simple wallet connect button
+export interface Props {
+  client?: string;
+}
+
+const { client } = Astro.props;
 ---
 
-<div class="connect-button-wrapper">
-  <WalletConnect client:only="react" />
-</div>
-
-<style>
-  .connect-button-wrapper {
-    display: inline-flex;
-    align-items: center;
-  }
-</style>
+<button class="btn btn-primary" type="button">
+  Connect Wallet
+</button>

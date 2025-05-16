@@ -55,7 +55,8 @@ export async function generateWithFlux(
     logger.info('FLUX generation successful', { imageId });
     return { url: `/api/images/${imageId}` };
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error('FLUX generation error', error);
-    return { error: `Failed to generate image: ${error.message}` };
+    return { error: `Failed to generate image: ${errorMessage}` };
   }
 }

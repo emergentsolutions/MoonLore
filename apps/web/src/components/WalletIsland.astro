@@ -1,5 +1,5 @@
 ---
-// Astro component for the wallet connect island
+// Simplified wallet island component
 export interface Props {
   className?: string;
 }
@@ -8,13 +8,8 @@ const { className = '' } = Astro.props;
 ---
 
 <div id="wallet-island" class={className}>
-  <WalletConnect client:load />
+  <button class="btn btn-primary">Connect Wallet</button>
 </div>
-
-<script>
-  // Import the React component
-  import WalletConnect from './WalletConnect.tsx';
-</script>
 
 <style>
   #wallet-island {

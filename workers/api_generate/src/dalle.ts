@@ -61,7 +61,8 @@ export async function generateWithDallE(
     logger.info('DALL-E generation successful', { imageId });
     return { url: `/api/images/${imageId}` };
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : String(error);
     logger.error('DALL-E generation error', error);
-    return { error: error.message };
+    return { error: errorMessage };
   }
 }

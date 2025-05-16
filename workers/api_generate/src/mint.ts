@@ -134,10 +134,11 @@ export async function mintNFT(env: Env, request: MintRequest): Promise<{
       txHash: tokenId, // In real implementation, would return actual tx hash
     };
   } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : 'Failed to mint NFT';
     logger.error('Mint failed', error);
     return {
       success: false,
-      error: error.message || 'Failed to mint NFT',
+      error: errorMessage,
     };
   }
 }

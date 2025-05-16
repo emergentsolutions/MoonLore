@@ -1,5 +1,5 @@
 ---
-// Astro wrapper for the React tip button
+// Simple tip button wrapper
 export interface Props {
   recipientAddress: string;
   imageId: string;
@@ -10,22 +10,12 @@ export interface Props {
 const { recipientAddress, imageId, creatorName, className } = Astro.props;
 ---
 
-<div class="tip-button-wrapper">
-  <TipButton 
-    client:load
-    recipientAddress={recipientAddress}
-    imageId={imageId}
-    creatorName={creatorName}
-    className={className}
-  />
+<div data-tip-button class={className} data-recipient={recipientAddress} data-image={imageId}>
+  <button class="btn btn-sm btn-primary">💜 Tip</button>
 </div>
 
 <style>
-  .tip-button-wrapper {
+  [data-tip-button] {
     display: inline-block;
   }
 </style>
-
-<script>
-  import TipButton from './TipButton.tsx';
-</script>

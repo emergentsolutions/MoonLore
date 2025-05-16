@@ -14,7 +14,6 @@ export default defineConfig({
     tailwind({
       applyBaseStyles: false,
     }),
-    react(),
   ],
   server: {
     host: true,
@@ -24,5 +23,17 @@ export default defineConfig({
     optimizeDeps: {
       exclude: ['@moonlore/tokens'],
     },
+    build: {
+      rollupOptions: {
+        external: ['node:path', 'node:fs/promises', 'node:url', 'node:crypto']
+      }
+    },
+    resolve: {
+      alias: {
+        '@components': '/src/components',
+        '@layouts': '/src/layouts',
+        '@lib': '/src/lib',
+      }
+    }
   },
 });

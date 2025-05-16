@@ -10,10 +10,14 @@
   },
   "dependencies": {
     "@cloudflare/ai": "^1.0.0",
-    "hono": "^4.0.0"
+    "hono": "^4.0.0",
+    "@openzeppelin/defender-relay-client": "^1.14.0",
+    "ethers": "^5.7.0",
+    "@moonlore/nft-minting": "workspace:*"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.0.0",
+    "@cloudflare/workers-types": "^4.20250515.0",
+    "@types/node": "^20.0.0",
     "typescript": "^5.0.0",
     "wrangler": "^3.0.0"
   }

@@ -1,5 +1,5 @@
 export { NFTRelayer, RelayerConfig } from './relayer';
-export { uploadToIPFS, IPFSUploadResult } from './ipfs';
+export { uploadToIPFS, uploadJSONToIPFS, IPFSUploadResult } from './ipfs';
 
 // Default configuration for Base L2
 export const DEFAULT_CONFIG = {
