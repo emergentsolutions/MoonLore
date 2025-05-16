@@ -1,5 +1,6 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import TipButtonWrapper from '../components/TipButtonWrapper.astro';
 ---
 
 <BaseLayout title="Gallery | Moonbirds Art Forge" description="Browse and discover Moonbird-style artwork created by the community">
@@ -46,12 +47,20 @@ import BaseLayout from '../layouts/BaseLayout.astro';
                   <h3 class="text-lg font-medium">Moonbird #{i+1}</h3>
                   <p class="text-sm text-foreground/80">By Creator{i+1}</p>
                 </div>
-                <button class="bg-primary hover:bg-primary-light text-background rounded-full p-2 transform translate-y-4 group-hover:translate-y-0 transition-transform">
-                  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                    <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
-                    <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
-                  </svg>
-                </button>
+                <div class="flex gap-2">
+                  <button class="bg-primary hover:bg-primary-light text-background rounded-full p-2 transform translate-y-4 group-hover:translate-y-0 transition-transform">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                      <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                    </svg>
+                  </button>
+                  <TipButtonWrapper
+                    recipientAddress="0x1234567890123456789012345678901234567890"
+                    imageId={`moonbird-${i+1}`}
+                    creatorName={`Creator${i+1}`}
+                    className="btn-sm transform translate-y-4 group-hover:translate-y-0 transition-transform"
+                  />
+                </div>
               </div>
             </div>
           </div>
