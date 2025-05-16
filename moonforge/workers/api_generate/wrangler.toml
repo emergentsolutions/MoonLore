@@ -4,6 +4,10 @@ compatibility_date = "2024-01-01"
 
 [env.production]
 workers_dev = false
+route = "api.moonbirds-art.com/*"
+
+[env.staging]
+workers_dev = true
 
 [[kv_namespaces]]
 binding = "GENERATED_IMAGES"
@@ -25,3 +29,20 @@ binding = "AI"
 
 [vars]
 USE_DALLE_FALLBACK = "true"
+
+# Environment-specific variables
+[env.production.vars]
+ENVIRONMENT = "production"
+LOG_LEVEL = "error"
+
+[env.staging.vars]
+ENVIRONMENT = "staging"
+LOG_LEVEL = "debug"
+
+# Development overrides
+[env.development]
+workers_dev = true
+[env.development.vars]
+ENVIRONMENT = "development"
+LOG_LEVEL = "debug"
+USE_DALLE_FALLBACK = "false"
