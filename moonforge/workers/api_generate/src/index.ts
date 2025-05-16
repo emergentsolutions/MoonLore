@@ -8,6 +8,7 @@ import { AppError, ValidationError, NotFoundError, errorHandler } from './errors
 export interface Env {
   AI: any;
   GENERATED_IMAGES: KVNamespace;
+  PROMPT_CACHE: KVNamespace;
   USE_DALLE_FALLBACK?: string;
 }
 

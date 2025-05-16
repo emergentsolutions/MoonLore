@@ -10,6 +10,11 @@ binding = "GENERATED_IMAGES"
 id = "YOUR_KV_NAMESPACE_ID"
 preview_id = "YOUR_PREVIEW_KV_NAMESPACE_ID"
 
+[[kv_namespaces]]
+binding = "PROMPT_CACHE"
+id = "YOUR_PROMPT_CACHE_NAMESPACE_ID"
+preview_id = "YOUR_PREVIEW_PROMPT_CACHE_ID"
+
 [ai]
 binding = "AI"
 
