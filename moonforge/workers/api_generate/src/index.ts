@@ -2,6 +2,8 @@ import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { generateWithFlux } from './flux';
 import { generateWithDallE } from './dalle';
+import { createLogger } from './logger';
+import { AppError, ValidationError, NotFoundError, errorHandler } from './errors';
 
 export interface Env {
   AI: any;
@@ -10,22 +12,27 @@ export interface Env {
 }
 
 const app = new Hono<{ Bindings: Env }>();
+const logger = createLogger('api-generate');
 
 // Configure CORS
 app.use('/*', cors());
 
 // Hello world endpoint
 app.get('/api/hello', (c) => {
+  logger.info('Hello endpoint called');
   return c.json({ message: 'Hello from Moonbirds Art Forge API!' });
 });
 
 // Generate endpoint with FLUX and DALL-E fallback
 app.post('/api/generate', async (c) => {
   try {
-    const { prompt, style } = await c.req.json();
+    const body = await c.req.json();
+    const { prompt, style } = body;
+    
+    logger.info('Generate request received', { prompt, style });
     
     if (!prompt) {
-      return c.json({ error: 'Prompt is required' }, 400);
+      throw new ValidationError('Prompt is required');
     }
     
     let result;
@@ -35,13 +42,15 @@ app.post('/api/generate', async (c) => {
     
     // If FLUX fails and fallback is enabled, try DALL-E
     if (result.error && c.env.USE_DALLE_FALLBACK === 'true') {
-      console.log('FLUX failed, falling back to DALL-E:', result.error);
+      logger.warn('FLUX failed, falling back to DALL-E', { error: result.error });
       result = await generateWithDallE(c.env, { prompt, style });
     }
     
     if (result.error) {
-      return c.json({ error: result.error }, 500);
+      throw new AppError(result.error, 500, 'GENERATION_FAILED');
     }
+    
+    logger.info('Image generated successfully', { url: result.url });
     
     // Return HTML for HTMX swap
     const html = `
@@ -72,8 +81,8 @@ app.post('/api/generate', async (c) => {
     
     return c.html(html);
   } catch (error) {
-    console.error('Generate error:', error);
-    return c.json({ error: 'Internal server error' }, 500);
+    logger.error('Generate error', error);
+    return errorHandler(error);
   }
 });
 
@@ -82,10 +91,11 @@ app.get('/api/images/:id', async (c) => {
   const imageId = c.req.param('id');
   
   try {
+    logger.debug('Fetching image', { imageId });
     const base64 = await c.env.GENERATED_IMAGES.get(`image:${imageId}`);
     
     if (!base64) {
-      return c.text('Image not found', 404);
+      throw new NotFoundError('Image not found');
     }
     
     // Convert base64 back to binary
@@ -96,8 +106,8 @@ app.get('/api/images/:id', async (c) => {
       'Cache-Control': 'public, max-age=3600'
     });
   } catch (error) {
-    console.error('Image fetch error:', error);
-    return c.text('Error fetching image', 500);
+    logger.error('Image fetch error', error);
+    return errorHandler(error);
   }
 });
 
@@ -106,29 +116,38 @@ app.get('/api/images/:id/metadata', async (c) => {
   const imageId = c.req.param('id');
   
   try {
+    logger.debug('Fetching metadata', { imageId });
     const { metadata } = await c.env.GENERATED_IMAGES.getWithMetadata(`image:${imageId}`);
     
     if (!metadata) {
-      return c.json({ error: 'Image not found' }, 404);
+      throw new NotFoundError('Image metadata not found');
     }
     
     return c.json(metadata);
   } catch (error) {
-    console.error('Metadata fetch error:', error);
-    return c.json({ error: 'Error fetching metadata' }, 500);
+    logger.error('Metadata fetch error', error);
+    return errorHandler(error);
   }
 });
 
 // Health check
 app.get('/api/health', (c) => {
-  return c.json({ 
+  const health = { 
     status: 'ok', 
     timestamp: new Date().toISOString(),
     features: {
       flux: true,
       dalle: c.env.USE_DALLE_FALLBACK === 'true'
     }
-  });
+  };
+  logger.debug('Health check', health);
+  return c.json(health);
+});
+
+// Global error handler
+app.onError((err, c) => {
+  logger.error('Unhandled error', err);
+  return errorHandler(err);
 });
 
 export default app;
