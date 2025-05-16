@@ -1,24 +1,15 @@
 ---
-// This component will be enhanced with client-side interactivity
+// This component now uses the WalletConnect React island
+import WalletConnect from './WalletConnect.tsx';
 ---
 
-<button
-  type="button"
-  class="btn btn-outline"
-  id="connect-wallet"
->
-  <span class="hidden sm:inline">Connect</span> Wallet
-</button>
+<div class="connect-button-wrapper">
+  <WalletConnect client:only="react" />
+</div>
 
-<script>
-  // Client-side wallet connection logic will be added here
-  document.addEventListener('astro:page-load', () => {
-    const connectButton = document.getElementById('connect-wallet');
-    if (connectButton) {
-      connectButton.addEventListener('click', async () => {
-        console.log('Connect wallet clicked');
-        // TODO: Implement wallet connection
-      });
-    }
-  });
-</script>
+<style>
+  .connect-button-wrapper {
+    display: inline-flex;
+    align-items: center;
+  }
+</style>
