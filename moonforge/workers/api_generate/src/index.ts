@@ -15,6 +15,9 @@ export interface Env {
   THIRDWEB_SECRET_KEY: string;
   RELAYER_PRIVATE_KEY: string;
   NFT_CONTRACT_ADDRESS: string;
+  DEFENDER_API_KEY?: string;
+  DEFENDER_API_SECRET?: string;
+  SIGNER_ADDRESS?: string;
   CHAIN_ID?: number;
   RPC_URL?: string;
 }

@@ -1,6 +1,7 @@
 import { Env } from './index';
 import { NFTRelayer } from '@moonforge/nft-minting';
 import { uploadToIPFS, uploadJSONToIPFS } from '@moonforge/nft-minting';
+import { GaslessMinter, NFT_ABI } from './gasless';
 import { createLogger } from './logger';
 import { AppError } from './errors';
 
@@ -12,6 +13,8 @@ interface MintRequest {
   name: string;
   description: string;
   attributes?: Array<{ trait_type: string; value: string | number }>;
+  gasless?: boolean;
+  signature?: string;
 }
 
 export async function mintNFT(env: Env, request: MintRequest): Promise<{
@@ -63,6 +66,43 @@ export async function mintNFT(env: Env, request: MintRequest): Promise<{
       env.THIRDWEB_SECRET_KEY
     );
     
+    // Check if gasless minting is requested
+    if (request.gasless && env.DEFENDER_API_KEY && env.DEFENDER_API_SECRET) {
+      logger.info('Using gasless minting');
+      
+      const gaslessMinter = new GaslessMinter(
+        {
+          apiKey: env.DEFENDER_API_KEY,
+          apiSecret: env.DEFENDER_API_SECRET,
+          speed: 'fast',
+        },
+        env.NFT_CONTRACT_ADDRESS,
+        NFT_ABI
+      );
+      
+      const { txHash, tokenId } = await gaslessMinter.mintGasless(
+        request.address,
+        metadataUpload.url,
+        request.signature
+      );
+      
+      // Store mint record
+      await storeMintRecord(env, tokenId, {
+        address: request.address,
+        metadata,
+        imageUrl: imageUpload.url,
+        metadataUrl: metadataUpload.url,
+        gasless: true,
+        txHash,
+      });
+      
+      return {
+        success: true,
+        tokenId,
+        txHash,
+      };
+    }
+    
     // Initialize relayer
     const relayer = new NFTRelayer({
       privateKey: env.RELAYER_PRIVATE_KEY,
@@ -77,19 +117,14 @@ export async function mintNFT(env: Env, request: MintRequest): Promise<{
     logger.info('Minting NFT', { to: request.address });
     const tokenId = await relayer.mintNFT(request.address, metadata);
     
-    // Store mint record in KV
-    await env.MINT_RECORDS.put(
-      `mint:${tokenId}`,
-      JSON.stringify({
-        tokenId,
-        address: request.address,
-        metadata,
-        imageUrl: imageUpload.url,
-        metadataUrl: metadataUpload.url,
-        createdAt: new Date().toISOString(),
-      }),
-      { expirationTtl: 86400 * 30 } // 30 days
-    );
+    // Store mint record
+    await storeMintRecord(env, tokenId, {
+      address: request.address,
+      metadata,
+      imageUrl: imageUpload.url,
+      metadataUrl: metadataUpload.url,
+      gasless: false,
+    });
     
     logger.info('NFT minted successfully', { tokenId });
     
@@ -105,6 +140,22 @@ export async function mintNFT(env: Env, request: MintRequest): Promise<{
       error: error.message || 'Failed to mint NFT',
     };
   }
+}
+
+async function storeMintRecord(
+  env: Env,
+  tokenId: string,
+  data: any
+): Promise<void> {
+  await env.MINT_RECORDS.put(
+    `mint:${tokenId}`,
+    JSON.stringify({
+      tokenId,
+      ...data,
+      createdAt: new Date().toISOString(),
+    }),
+    { expirationTtl: 86400 * 30 } // 30 days
+  );
 }
 
 export async function getMintRecord(env: Env, tokenId: string): Promise<any> {
