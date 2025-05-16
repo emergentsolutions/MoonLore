@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-MoonLore is a monorepo project for creating Wizard-Moonbird-style artwork using AI. It enables users to generate artwork, mint as NFTs, and tip with MOON tokens.
+MoonLore is a Web3 application for creating Wizard-Moonbird-style artwork using AI. It enables users to generate artwork, mint as NFTs, and tip with MOON tokens.
 
 ## Common Development Commands
 
@@ -43,14 +43,24 @@ This is a pnpm monorepo with the following structure:
   - Images should be placed in `src/assets/` to use Astro image processing (except SVGs)
 
 - **packages/tokens**: Design system tokens for Tailwind CSS configuration
+  - Published as `@moonlore/tokens`
 
-- **workers/api_generate**: API endpoint for AI image generation (TODO)
+- **packages/nft-minting**: NFT minting utilities
+  - Published as `@moonlore/nft-minting`
+  - Handles ThirdWeb integration and gasless minting
+
+- **workers/api_generate**: API endpoint for AI image generation
+  - Cloudflare Worker with Hono framework
+  - Integrates FLUX and DALL-E models
+  - Handles NFT minting and tip recording
 
 ### Key Technologies
-- **Frontend**: Astro, Tailwind CSS, HTMX
+- **Frontend**: Astro, Tailwind CSS, HTMX, React (for wallet components)
 - **Deployment**: Cloudflare Pages/Workers
 - **Package Manager**: pnpm with workspace configuration
 - **Node Version**: >=20.0.0
+- **AI Models**: FLUX (primary), DALL-E (fallback)
+- **Blockchain**: Base L2, wagmi/viem for Web3 integration
 
 ### Task Management
 
@@ -61,9 +71,8 @@ The project uses a recursive task tracking system in `tasks.qslice` with the fol
 
 ### Development Guidelines
 
-- Use Astro best practices, NOT React
+- Use Astro best practices, NOT React (except for specific islands)
 - Follow Flowbite methodology with Tailwind for components
-- Use Flowbite Pro page templates and blocks before writing custom code
 - Use path aliases (e.g., @components) for imports where possible
 - Maintain TypeScript strict mode
 - Images need to be in `src/assets/` for Astro processing (except SVGs)
@@ -75,9 +84,28 @@ The project uses a recursive task tracking system in `tasks.qslice` with the fol
 - Static assets (including SVGs): Place in `public/`
 - Use Astro Image component for optimized image loading
 
-### API Routes (TODO)
-The project plans to implement:
+### API Routes
+The project implements:
 - `/api/generate`: AI image generation endpoint
+- `/api/mint`: NFT minting endpoint
+- `/api/tips`: MOON token tipping functionality
 - Workers for FLUX/DALL-E integration
-- NFT minting endpoints
-- MOON token tipping functionality
+- KV storage for images, prompts, and mint records
+
+### Environment Variables
+
+Required for development and deployment:
+- `CLOUDFLARE_API_TOKEN`: For deployment
+- `THIRDWEB_SECRET_KEY`: NFT minting
+- `RELAYER_PRIVATE_KEY`: Gasless transactions
+- `NFT_CONTRACT_ADDRESS`: Deployed contract
+- `DEFENDER_API_KEY`: OpenZeppelin Defender (optional)
+- `PUBLIC_WEB3_PROJECT_ID`: WalletConnect
+
+### Deployment
+
+The project is configured for Cloudflare deployment:
+- Pages for the frontend (apps/web)
+- Workers for the API (workers/api_generate)
+- KV namespaces for data storage
+- R2 buckets for image storage

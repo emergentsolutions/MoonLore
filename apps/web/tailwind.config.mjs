@@ -1,5 +1,5 @@
 /** @type {import('tailwindcss').Config} */
-import { colors, typography, spacing, borderRadius, boxShadow } from '@moonforge/tokens';
+import { colors, typography, spacing, borderRadius, boxShadow } from '@moonlore/tokens';
 
 export default {
   content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],

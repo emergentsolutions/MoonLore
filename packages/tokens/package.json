@@ -1,7 +1,7 @@
 {
-  "name": "@moonforge/tokens",
+  "name": "@moonlore/tokens",
   "version": "0.1.0",
-  "description": "Design tokens for Moonbirds Art Forge",
+  "description": "Design tokens for MoonLore",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",

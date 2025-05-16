@@ -22,7 +22,7 @@ export default defineConfig({
   },
   vite: {
     optimizeDeps: {
-      exclude: ['@moonforge/tokens'],
+      exclude: ['@moonlore/tokens'],
     },
   },
 });

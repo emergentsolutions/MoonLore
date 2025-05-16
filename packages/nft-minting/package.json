@@ -1,7 +1,7 @@
 {
-  "name": "@moonforge/nft-minting",
+  "name": "@moonlore/nft-minting",
   "version": "0.1.0",
-  "description": "NFT minting utilities for Moonbirds Art Forge",
+  "description": "NFT minting utilities for MoonLore",
   "main": "src/index.ts",
   "scripts": {
     "build": "tsc"

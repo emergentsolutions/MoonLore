@@ -1,14 +1,11 @@
 #!/bin/bash
 
 # Prepare deployment script
-# This script prepares the moonforge directory for deployment
+# This script prepares the MoonLore project for deployment
 
 set -e
 
-echo "Preparing moonforge for deployment..."
-
-# Change to the moonforge directory
-cd moonforge
+echo "Preparing MoonLore for deployment..."
 
 # Ensure no submodule issues
 if [ -f .git ]; then

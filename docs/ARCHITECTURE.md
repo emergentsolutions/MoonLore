@@ -38,7 +38,7 @@ graph TB
 ## 📁 Project Structure
 
 ```
-moonforge/
+moonlore/
 ├── apps/
 │   └── web/                 # Frontend application
 │       ├── src/

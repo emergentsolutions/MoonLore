@@ -1,6 +1,6 @@
 import { Env } from './index';
-import { NFTRelayer } from '@moonforge/nft-minting';
-import { uploadToIPFS, uploadJSONToIPFS } from '@moonforge/nft-minting';
+import { NFTRelayer } from '@moonlore/nft-minting';
+import { uploadToIPFS, uploadJSONToIPFS } from '@moonlore/nft-minting';
 import { GaslessMinter, NFT_ABI } from './gasless';
 import { createLogger } from './logger';
 import { AppError } from './errors';

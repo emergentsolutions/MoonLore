@@ -2,7 +2,7 @@
 
 ## ⚠️ Important: Submodule Issue
 
-This repository has a historical issue where the `moonforge` directory was previously a git submodule. This causes deployment failures with the error "Failed: error occurred while updating repository submodules".
+This repository has been restructured from the original moonforge project to MoonLore. This causes deployment failures with the error "Failed: error occurred while updating repository submodules".
 
 ## 🚀 Deployment Options
 
@@ -11,8 +11,8 @@ This repository has a historical issue where the `moonforge` directory was previ
 1. **Fork or Clone this repository**
 2. **Create a new Cloudflare Pages project**
 3. **Configure build settings:**
-   - Build command: `cd moonforge && npm install -g pnpm && pnpm install --frozen-lockfile && cd apps/web && pnpm build`
-   - Build output directory: `moonforge/apps/web/dist`
+   - Build command: `npm install -g pnpm && pnpm install --frozen-lockfile && cd apps/web && pnpm build`
+   - Build output directory: `apps/web/dist`
    - Root directory: `/`
    - Environment variables:
      - `NODE_VERSION`: `20`
@@ -31,12 +31,11 @@ This repository has a historical issue where the `moonforge` directory was previ
 1. **Clone the repository:**
    ```bash
    git clone <your-repo-url>
-   cd moonbirds-art-forge
+   cd moonlore
    ```
 
 2. **Prepare and build:**
    ```bash
-   cd moonforge
    pnpm install --frozen-lockfile
    cd apps/web
    pnpm build

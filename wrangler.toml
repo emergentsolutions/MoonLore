@@ -1,15 +1,33 @@
-# Root-level Cloudflare Pages configuration
-name = "moonbirds-art-forge"
-compatibility_date = "2024-01-01"
+# Cloudflare Pages configuration
+name = "moonlore"
+compatibility_date = "2025-01-01"
 
-[deployment]
-production_branch = "main"
+[build]
+command = "pnpm install && pnpm build"
+working_directory = "/"
+watch_paths = ["apps/**/*", "packages/**/*", "workers/**/*"]
 
-[[pages]]
-source = "moonforge/apps/web/dist"
+[build.upload]
+format = "service-worker"
 
-[pages.build]
-command = "cd moonforge && pnpm install --frozen-lockfile && cd apps/web && pnpm build"
+[[build.upload.rules]]
+type = "CompiledWasm"
+globs = ["**/*.wasm"]
+fallthrough = false
 
-[pages.environment]
-NODE_VERSION = "20"
+[[build.upload.rules]]
+type = "Text"
+globs = ["**/*.js", "**/*.css", "**/*.json", "**/*.html"]
+
+# KV Namespace for sessions
+[[kv_namespaces]]
+binding = "SESSION"
+id = "moonlore_session_kv"
+preview_id = "moonlore_session_kv_preview"
+
+# R2 Bucket for image storage
+[[r2_buckets]]
+binding = "IMAGES"
+bucket_name = "moonlore-images"
+preview_bucket_name = "moonlore-images-preview"
+fallthrough = true

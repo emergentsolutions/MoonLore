@@ -4,10 +4,9 @@ build:
   environment:
     NODE_VERSION: "20"
   command: |
-    cd moonforge
     npm install -g pnpm@10.10.0
     pnpm install --frozen-lockfile
     cd apps/web
     pnpm build
-  directory: moonforge/apps/web
+  directory: apps/web
   publish: dist

@@ -1,7 +1,7 @@
-# Moonbirds Art Forge 🎨🦉
+# MoonLore 🎨🦉
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/yourusername/moonbirds-art-forge)
-[![CI Status](https://github.com/yourusername/moonbirds-art-forge/workflows/CI/badge.svg)](https://github.com/yourusername/moonbirds-art-forge/actions)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/emergentsolutions/MoonLore)
+[![CI Status](https://github.com/emergentsolutions/MoonLore/workflows/CI/badge.svg)](https://github.com/emergentsolutions/MoonLore/actions)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 Create stunning Wizard-Moonbird-style artwork using AI, mint as NFTs, and tip creators with MOON tokens.
@@ -19,7 +19,7 @@ Create stunning Wizard-Moonbird-style artwork using AI, mint as NFTs, and tip cr
 
 Deploy your own instance with one click:
 
-[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/yourusername/moonbirds-art-forge)
+[![Deploy to Cloudflare Workers](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/yourusername/moonlore)
 
 ## 📋 Prerequisites
 
@@ -32,8 +32,8 @@ Deploy your own instance with one click:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/moonbirds-art-forge.git
-   cd moonbirds-art-forge
+   git clone https://github.com/yourusername/moonlore.git
+   cd moonlore
    ```
 
 2. **Install dependencies**
@@ -60,7 +60,7 @@ Deploy your own instance with one click:
 ## 🏗️ Architecture
 
 ```
-moonforge/
+moonlore/
 ├── apps/
 │   └── web/             # Astro frontend application
 ├── packages/
