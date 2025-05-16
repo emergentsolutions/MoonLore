@@ -1,10 +1,12 @@
 import { Hono } from 'hono';
 import { cors } from 'hono/cors';
 import { generateWithFlux } from './flux';
+import { generateWithDallE } from './dalle';
 
 export interface Env {
   AI: any;
   GENERATED_IMAGES: KVNamespace;
+  USE_DALLE_FALLBACK?: string;
 }
 
 const app = new Hono<{ Bindings: Env }>();
@@ -17,7 +19,7 @@ app.get('/api/hello', (c) => {
   return c.json({ message: 'Hello from Moonbirds Art Forge API!' });
 });
 
-// Generate endpoint with FLUX
+// Generate endpoint with FLUX and DALL-E fallback
 app.post('/api/generate', async (c) => {
   try {
     const { prompt, style } = await c.req.json();
@@ -26,8 +28,16 @@ app.post('/api/generate', async (c) => {
       return c.json({ error: 'Prompt is required' }, 400);
     }
     
-    // Generate image using FLUX
-    const result = await generateWithFlux(c.env, { prompt, style });
+    let result;
+    
+    // Try FLUX first
+    result = await generateWithFlux(c.env, { prompt, style });
+    
+    // If FLUX fails and fallback is enabled, try DALL-E
+    if (result.error && c.env.USE_DALLE_FALLBACK === 'true') {
+      console.log('FLUX failed, falling back to DALL-E:', result.error);
+      result = await generateWithDallE(c.env, { prompt, style });
+    }
     
     if (result.error) {
       return c.json({ error: result.error }, 500);
@@ -40,14 +50,21 @@ app.post('/api/generate', async (c) => {
           src="${result.url}" 
           alt="Generated Moonbird" 
           class="w-full h-full object-contain rounded-lg"
-          hx-get="${result.url}"
-          hx-trigger="error"
-          hx-swap="innerHTML"
-          hx-target="#image-preview"
+          loading="lazy"
         />
-        <div class="mt-4 text-center">
-          <button class="btn btn-primary" onclick="mintNFT('${result.url}')">
+        <div class="mt-4 text-center space-y-2">
+          <button 
+            class="btn btn-primary" 
+            onclick="mintNFT('${result.url}')"
+            data-image-url="${result.url}"
+          >
             Mint as NFT
+          </button>
+          <button 
+            class="btn btn-outline" 
+            onclick="downloadImage('${result.url}')"
+          >
+            Download
           </button>
         </div>
       </div>
@@ -84,9 +101,34 @@ app.get('/api/images/:id', async (c) => {
   }
 });
 
+// Get image metadata
+app.get('/api/images/:id/metadata', async (c) => {
+  const imageId = c.req.param('id');
+  
+  try {
+    const { metadata } = await c.env.GENERATED_IMAGES.getWithMetadata(`image:${imageId}`);
+    
+    if (!metadata) {
+      return c.json({ error: 'Image not found' }, 404);
+    }
+    
+    return c.json(metadata);
+  } catch (error) {
+    console.error('Metadata fetch error:', error);
+    return c.json({ error: 'Error fetching metadata' }, 500);
+  }
+});
+
 // Health check
 app.get('/api/health', (c) => {
-  return c.json({ status: 'ok', timestamp: new Date().toISOString() });
+  return c.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    features: {
+      flux: true,
+      dalle: c.env.USE_DALLE_FALLBACK === 'true'
+    }
+  });
 });
 
 export default app;

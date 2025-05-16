@@ -12,3 +12,6 @@ preview_id = "YOUR_PREVIEW_KV_NAMESPACE_ID"
 
 [ai]
 binding = "AI"
+
+[vars]
+USE_DALLE_FALLBACK = "true"
